@@ -111,6 +111,8 @@ void cargar_peliculas(List *list_canciones, Map *songs_bygenres, Map *songs_byar
       MapPair *par = map_search(songs_bytempo, "rapidas") ;
       list_pushBack(par->value, cancion) ;
     }
+    printf("ID: %s, Titulo: %s, Artista: %s, Album: %s, Genero: %s Tempo: %f\n", cancion->id, cancion->track_name, cancion->artists, 
+      cancion->album_name, cancion->track_genre, cancion->tempo) ;
 
     
 
@@ -125,7 +127,7 @@ void buscar_por_genero(Map *songs_bygenre) {
   char genero[100];
 
   // Solicita al usuario el ID de la película
-  printf("Ingrese el género de la cancion: ");
+  printf("Ingrese el genero de la cancion: ");
   scanf(" %[^\n]s", genero); // Lee el genero del teclado
 
   MapPair *pair = map_search(songs_bygenre, genero);
@@ -135,7 +137,8 @@ void buscar_por_genero(Map *songs_bygenre) {
       Song *canc = list_first(songs);
       
       while (canc != NULL) {
-        printf("titulo: %s, artista: %s, nombre del album: %s, id: %s \n", canc->track_name, canc->artists, canc->album_name, canc->id);
+        printf("ID: %s, Titulo: %s, Artista: %s, Album: %s, Tempo: %f\n", canc->id, canc->track_name, canc->artists, canc->album_name,
+           canc->tempo);
         canc = list_next(songs);
       }
   }
@@ -153,7 +156,8 @@ void buscar_por_artista(Map *songs_byartist){
       Song *canc = list_first(songs);
       
       while (canc != NULL) {
-        printf("id: %d, titulo: %s, nombre del album: %s \n", canc->id,  canc->track_name, canc->artists, canc->album_name);
+        printf("ID : %s, Titulo: %s, Album: %s, Genero: %s, Tempo: %f \n", canc->id, canc->track_name, canc->album_name, canc->track_genre, 
+          canc->tempo);
         canc = list_next(songs);
       }
   }
@@ -166,7 +170,8 @@ void mostrar_tempo(Map* songs_bytempo,char temp[10]){
       Song *canc = list_first(songs);
       
       while (canc != NULL) {
-        printf("Titulo: %s, artista: %s, album: %s, tempo: %f \n", canc->track_name, canc->artists, canc->album_name, canc->tempo);
+        printf("ID: %s,Titulo: %s, Artista: %s, Album: %s, Genero: %s Tempo: %f \n", canc->id, canc->track_name, canc->artists, canc->album_name, 
+          canc->track_genre, canc->tempo);
         canc = list_next(songs);
       }
   }
