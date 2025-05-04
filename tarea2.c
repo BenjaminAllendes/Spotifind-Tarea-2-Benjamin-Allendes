@@ -18,7 +18,7 @@ typedef struct {
 void mostrarMenuPrincipal() {
   limpiarPantalla();
   puts("========================================");
-  puts("     Base de Datos de canciones");
+  puts("              Spotifind                 ");
   puts("========================================");
 
   puts("1) Cargar canciones");
