@@ -1,6 +1,6 @@
 # Spotifind
 
-Este sistema permite a los usuarios cargar canciones de un archivo csv, buscar las canciones cargadas por su genero, artista, o tempo (rapidez). 
+Este sistema permite a los usuarios cargar canciones de un archivo CSV, buscar las canciones cargadas por su genero, artista, o tempo (velocidad). 
 
 ## Cómo compilar y ejecutar
 
@@ -26,7 +26,7 @@ Este sistema ha sido desarrollado en lenguaje C y puede ejecutarse fácilmente u
     gcc tdas/*.c spotifind.c -Wno-unused-result -o spotifind
     ```
 4. Ejecuta el programa
-    - Una vez compilado, puedes ejecutar la aplicación con:`
+    - Una vez compilado, puedes ejecutar la aplicación con:
     ```
     ./spotifind
     ```
@@ -47,51 +47,46 @@ Este sistema ha sido desarrollado en lenguaje C y puede ejecutarse fácilmente u
 
 ## Ejemplo de uso
 ### Paso 1: Cargar canciones
-En `sptofind.c` se ingresa la ruta de la ruta del arhcivo CSV dentro de la carpeta del programa  de donde se quiera cargar las canciones (por ejemplo `data/song_dataset_.csv`), se guardan la informacion de las canciones y se muestra cada cancion guardada.
+En `spotfind.c` se ingresa la ruta de la ruta del arhcivo CSV dentro de la carpeta del programa  de donde se quiera cargar las canciones (por ejemplo `data/song_dataset_.csv`), se guardan la informacion de las canciones y se muestra cada cancion guardada.
 
 ```
 60  FILE *archivo = fopen("RUTA DEL ARCHIVO", "r");
 ```
 
 ### Paso 2: Buscar por genero
-Tras cargar las canciones, el usuario decide buscar todas las canciones de un artista que fueron cargadas.
+Tras cargar las canciones, el usuario decide buscar todas las canciones de un genero que fueron cargadas.
 ```
-Opcion seleccionada: 2) Asignar prioridad a ticket
-ID del ticket: ticket-1
-1) Prioridad Baja
-2) Prioridad Media
-3) Prioridad Alta
-Ingrese su opcion: 3
-Prioridad asignada correctamente!
+Ingrese el genero de la cancion: acoustic
+ID: 0, Titulo: Comedy, Artista: Gen Hoshino, Album: Comedy, Tempo: 87.917000
+ID: 1, Titulo: Ghost - Acoustic, Artista: Ben Woodward, Album: Ghost (Acoustic), Tempo: 77.488998
+ID: 2, Titulo: To Begin Again, Artista: Ingrid Michaelson;ZAYN, Album: To Begin Again, Tempo: 76.332001
+ID: 3, Titulo: Can't Help Falling In Love, Artista: Kina Grannis, Album: Crazy Rich Asians (Original Motion Picture Soundtrack), Tempo: 181.740005
+[La lista sigue hasta mostrar todas las canciones guardadas del mismo genero]
 ```
 
+### Paso 3: Buscar por artista
+El usuario busca todas las canciones de un mismo artista que fueron cargadas.
+```
+Ingrese el artista de la cancion: Weezer
+ID : 2027, Titulo: Records, Album: Tek It - New Noise, Genero: alt-rock, Tempo: 100.005997 
+ID : 2063, Titulo: Records, Album: Rock - Best of 2022, Genero: alt-rock, Tempo: 100.005997 
+ID : 2064, Titulo: Say It Ain't So, Album: Los Cl├ísicos del Pop 90s, Genero: alt-rock, Tempo: 151.779007 
+ID : 2065, Titulo: Say It Ain't So, Album: 90's Music Grandi Successi, Genero: alt-rock, Tempo: 151.779007
+[La lista sigue hasta mostrar todas las canciones guardadas del mismo artista]
+```
 
-### Paso 3: Ver la lista de tickets
-El usuario revisa la lista de espera para ver todos los pacientes y sus prioridades.
+### Paso 4: Buscar por tempo
+El usuario busca todas las canciones por un mismo rango de beats-per-seocn (BPM). Existen tres rangos, canciones lentas (<80 BPM), moderadas (80-120 BPM) y rapidas (120< BPM).
 ```
-Tickets en espera:
-ID: ticket-1 prioridad = Alta <--
-```
-La lista muestra el ticket ingresado anteriormente, indicando que es el siguiente ticket en ser atendido
-
-### Paso 4: Atender el siguiente ticket
-El ticket con ID IIIIII es procesado y se revisa su solicitud de ayuda.
-```
-Opcion seleccionada: 4) Atender al siguiente ticket
-Siguiente ticket: ID = ticket-1
-Fecha y hora = Fri Apr 11 20:59:04 2025
-Problema = Pagina web no carga.
-Prioridad Alta
-```
-El sistema muestra la informacion guardada y lo elimina del sistema.
-
-### Paso 5: Buscar ticket por ID
-Otro ticket se registra y se ingresa para mostrar su informacion.
-```
-ID del ticket: otro-ticket
-
-Informacion Del ticket 'otro-ticket':
-Hora = Fri Apr 11 21:00:11 2025
-Problema = No cargan las imagenes de la web.
-Prioridad media
+1) Lentas <80 BPM
+2) Moderadas 80-120 BPM
+3) Rapidas 120< BPM
+Ingrese su opcion: 1
+ID: 1,Titulo: Ghost - Acoustic, Artista: Ben Woodward, Album: Ghost (Acoustic), Genero: acoustic Tempo: 77.488998 
+ID: 2,Titulo: To Begin Again, Artista: Ingrid Michaelson;ZAYN, Album: To Begin Again, Genero: acoustic Tempo: 76.332001 
+ID: 9,Titulo: Hunger, Artista: Ross Copperman, Album: Hunger, Genero: acoustic Tempo: 78.899002
+ID: 53,Titulo: A Drop in the Ocean, Artista: Ron Pope, Album: The Bedroom Demos, Genero: acoustic Tempo: 73.139000
+ID: 102,Titulo: Pieces (Hushed), Artista: Andrew Belle, Album: Black Bear (Hushed), Genero: acoustic Tempo: 69.641998
+ID: 103,Titulo: Mirrors, Artista: Boyce Avenue;Fifth Harmony, Album: Cover Sessions, Vol. 3, Genero: acoustic Tempo: 76.971001
+[Lista sigue hasta mostrar todas las canciones lentas]
 ```

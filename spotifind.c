@@ -179,10 +179,11 @@ void mostrar_tempo(Map* songs_bytempo,char temp[10]){
 
 
 void buscar_por_tempo(Map *songs_bytempo){
-  printf("Ingrese la opcion:\n") ;
+  
   puts("1) Lentas <80 BPM") ;
   puts("2) Moderadas 80-120 BPM") ;
   puts("3) Rapidas 120< BPM") ;
+  printf("Ingrese su opcion: ") ;
   
   char opcion ;
   scanf(" %c", &opcion) ;
