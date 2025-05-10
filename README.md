@@ -30,6 +30,7 @@ Este sistema ha sido desarrollado en lenguaje C y puede ejecutarse fácilmente u
     ```
     ./spotifind
     ```
+
 ## Funcionalidades
 
 ### Funcionando correctamente:
@@ -39,7 +40,7 @@ Este sistema ha sido desarrollado en lenguaje C y puede ejecutarse fácilmente u
 - Buscar canciones por tempo (lentas, moderadas y rapidas) y mostrar la informacion guardada de cada una.
 
 ### Problemas conocidos:
-- Programa tiene problemas con algunos caracteres especiales como las tildes. 
+- Programa tiene problemas con algunos caracteres especiales como las tildes, causando algunos problemas visuales cuando una cancion contiene estos. 
 
 ### A mejorar:
 - Compatibilidad con mas tipos de caracteres para evitar problemas con canciones que contengan estos.

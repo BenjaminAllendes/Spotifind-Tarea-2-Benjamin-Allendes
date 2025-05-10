@@ -10,7 +10,7 @@ typedef struct {
   char artists[100];
   char album_name[100];
   char track_name[100];
-  float tempo;
+  char tempo[100];
   char track_genre[1000] ;
 } Song;
 
@@ -29,33 +29,26 @@ void mostrarMenuPrincipal() {
 }
 
 /**
- * Compara dos claves de tipo string para determinar si son iguales.
- * Esta función se utiliza para inicializar mapas con claves de tipo string.
- *
- * @param key1 Primer puntero a la clave string.
- * @param key2 Segundo puntero a la clave string.
- * @return Retorna 1 si las claves son iguales, 0 de lo contrario.
+  Compara dos claves de tipo string para determinar si son iguales.
+  Esta función se utiliza para inicializar mapas con claves de tipo string.
  */
 int is_equal_str(void *key1, void *key2) {
   return strcmp((char *)key1, (char *)key2) == 0;
 }
 
-/**
- * Compara dos claves de tipo entero para determinar si son iguales.
- * Esta función se utiliza para inicializar mapas con claves de tipo entero.
- *
- * @param key1 Primer puntero a la clave entera.
- * @param key2 Segundo puntero a la clave entera.
- * @return Retorna 1 si las claves son iguales, 0 de lo contrario.
+/*
+   Compara dos claves de tipo entero para determinar si son iguales.
+   Esta función se utiliza para inicializar mapas con claves de tipo entero.
  */
 int is_equal_int(void *key1, void *key2) {
   return *(int *)key1 == *(int *)key2; // Compara valores enteros directamente
 }
 
 /**
- * Carga películas desde un archivo CSV y las almacena en un mapa por ID.
+ * Carga películas desde un archivo CSV y las almacena en distintos mapas, los cuales 
+ * son los criterios de busqueda
  */
-void cargar_peliculas(List *list_canciones, Map *songs_bygenres, Map *songs_byartist, Map *songs_bytempo) {
+void cargar_peliculas(Map *songs_bygenres, Map *songs_byartist, Map *songs_bytempo) {
   // Intenta abrir el archivo CSV que contiene datos de películas
   FILE *archivo = fopen("data/song_dataset_.csv", "r");
   if (archivo == NULL) {
@@ -70,17 +63,19 @@ void cargar_peliculas(List *list_canciones, Map *songs_bygenres, Map *songs_byar
   campos = leer_linea_csv(archivo, ','); // Lee los encabezados del CSV
   // Lee cada línea del archivo CSV hasta el final
   while ((campos = leer_linea_csv(archivo, ',')) != NULL) {
-    // Crea una nueva estructura Film y almacena los datos de cada película
+    // Crea una nueva estructura Song y almacena los datos de cada cancion
     Song *cancion = (Song *)malloc(sizeof(Song));
-    strcpy(cancion->id, campos[0]); ;// Asigna ID
-    strcpy(cancion->artists, campos[2]);     // Asigna título
-    strcpy(cancion->album_name, campos[3]); // Asigna director
-    strcpy(cancion->track_name, campos[4]);
-    cancion->tempo = atof(campos[18]) ;
-    strcpy(cancion->track_genre, campos[20]);
+    strcpy(cancion->id, campos[0]);  ;// Asigna ID
+    strcpy(cancion->artists, campos[2]);     // Asigna titulo
+    strcpy(cancion->album_name, campos[3]); // Asigna nombre del album
+    strcpy(cancion->track_name, campos[4]); // Asigna nombre de la cancion
+    strcpy(cancion->tempo, campos[18]); // Asigna BPM 
+    strcpy(cancion->track_genre, campos[20]); // Asigna genero 
     
-    list_pushBack(list_canciones, cancion);
-
+    /* Para los mapas de genero y artista primero se pregunta si la llave no se encuentra. Si esto se cumple
+    se agrega el nuevo par al mapa con el genero y el valor como una lista nueva que almacenara canciones. En cambio 
+    si la llave esta entonces se agrega la cancion a la lista correspondiente.
+    */
     if (map_search(songs_bygenres, cancion->track_genre) == NULL){
       List *list_genre = list_create() ;
       list_pushFront(list_genre, cancion) ;
@@ -99,11 +94,11 @@ void cargar_peliculas(List *list_canciones, Map *songs_bygenres, Map *songs_byar
       MapPair *par = map_search(songs_byartist, cancion->artists) ;
       list_pushBack(par->value, cancion) ;
     }
-    if (cancion->tempo < 80){
+    if (atof(cancion->tempo) < 80){
       MapPair *par = map_search(songs_bytempo, "lentas") ;
       list_pushBack(par->value, cancion) ;
     }
-    else if (cancion->tempo >= 80 && cancion->tempo <= 120) {
+    else if (atof(cancion->tempo) >= 80 && atof(cancion->tempo) <= 120) {
       MapPair *par = map_search(songs_bytempo, "moderadas") ;
       list_pushBack(par->value, cancion) ;
     }
@@ -111,8 +106,8 @@ void cargar_peliculas(List *list_canciones, Map *songs_bygenres, Map *songs_byar
       MapPair *par = map_search(songs_bytempo, "rapidas") ;
       list_pushBack(par->value, cancion) ;
     }
-    printf("ID: %s, Titulo: %s, Artista: %s, Album: %s, Genero: %s Tempo: %f\n", cancion->id, cancion->track_name, cancion->artists, 
-      cancion->album_name, cancion->track_genre, cancion->tempo) ;
+    printf("ID: %s, Titulo: %s, Artista: %s, Album: %s, Genero: %s Tempo: %s\n", cancion->id, cancion->track_name, cancion->artists, 
+      cancion->album_name, cancion->track_genre, cancion->tempo) ; // Muestra cada cancion cargada
 
     
 
@@ -123,10 +118,12 @@ void cargar_peliculas(List *list_canciones, Map *songs_bygenres, Map *songs_byar
 
 }
 
+// Funcion para ingresar un genero y buscar el mapa que tenga la llave ingresada.
+// Luego se muestra la lista de canciones.
 void buscar_por_genero(Map *songs_bygenre) {
   char genero[100];
 
-  // Solicita al usuario el ID de la película
+  // Se solicita el genero de la cancion para buscar el mapa
   printf("Ingrese el genero de la cancion: ");
   scanf(" %[^\n]s", genero); // Lee el genero del teclado
 
@@ -135,15 +132,16 @@ void buscar_por_genero(Map *songs_bygenre) {
   if (pair != NULL) {
       List* songs = pair->value;
       Song *canc = list_first(songs);
-      
+      // Se recorre la lista y se muestran la informacion de cada cancion
       while (canc != NULL) {
-        printf("ID: %s, Titulo: %s, Artista: %s, Album: %s, Tempo: %f\n", canc->id, canc->track_name, canc->artists, canc->album_name,
+        printf("ID: %s, Titulo: %s, Artista: %s, Album: %s, Tempo: %s\n", canc->id, canc->track_name, canc->artists, canc->album_name,
            canc->tempo);
         canc = list_next(songs);
       }
   }
 }
-
+// Funcion para ingresar un artista y buscar el mapa que tenga la llave ingresada.
+// Luego se muestra la lista de canciones.
 void buscar_por_artista(Map *songs_byartist){
   char artista[100];
   printf("Ingrese el artista de la cancion: ");
@@ -156,7 +154,7 @@ void buscar_por_artista(Map *songs_byartist){
       Song *canc = list_first(songs);
       
       while (canc != NULL) {
-        printf("ID : %s, Titulo: %s, Album: %s, Genero: %s, Tempo: %f \n", canc->id, canc->track_name, canc->album_name, canc->track_genre, 
+        printf("ID : %s, Titulo: %s, Album: %s, Genero: %s, Tempo: %s \n", canc->id, canc->track_name, canc->album_name, canc->track_genre, 
           canc->tempo);
         canc = list_next(songs);
       }
@@ -170,14 +168,15 @@ void mostrar_tempo(Map* songs_bytempo,char temp[10]){
       Song *canc = list_first(songs);
       
       while (canc != NULL) {
-        printf("ID: %s,Titulo: %s, Artista: %s, Album: %s, Genero: %s Tempo: %f \n", canc->id, canc->track_name, canc->artists, canc->album_name, 
+        printf("ID: %s,Titulo: %s, Artista: %s, Album: %s, Genero: %s Tempo: %s \n", canc->id, canc->track_name, canc->artists, canc->album_name, 
           canc->track_genre, canc->tempo);
         canc = list_next(songs);
       }
   }
 }
 
-
+// Funcion para ingresar una  y buscar el mapa que tenga la llave ingresada.
+// Luego se muestra la lista de canciones.
 void buscar_por_tempo(Map *songs_bytempo){
   
   puts("1) Lentas <80 BPM") ;
@@ -203,6 +202,7 @@ void buscar_por_tempo(Map *songs_bytempo){
   }
 }
 
+// Al inicializar el mapa tempo se agregan los pares de datos ya que solo se necesitan tres tipos de llaves fijas
 void asignar_claves_tempo(Map *tempo){
   List *lentas = list_create() ;
   List *moderadas = list_create() ;
@@ -217,11 +217,8 @@ void asignar_claves_tempo(Map *tempo){
 
 int main() {
   char opcion; // Variable para almacenar una opción ingresada por el usuario
-               // (sin uso en este fragmento)
 
-  // Crea un mapa para almacenar películas, utilizando una función de
-  // comparación que trabaja con claves de tipo string.
-  List *list_canciones = list_create() ;
+  // Se crea un mapa para cada tipo de busqueda
   Map *songs_bygenres = map_create(is_equal_str);
   Map *songs_byartist = map_create(is_equal_str) ;
   Map *songs_bytempo = map_create(is_equal_str) ;
@@ -234,7 +231,7 @@ int main() {
 
     switch (opcion) {
     case '1':
-      cargar_peliculas(list_canciones, songs_bygenres, songs_byartist, songs_bytempo);
+      cargar_peliculas(songs_bygenres, songs_byartist, songs_bytempo);
       break;
     case '2':
       buscar_por_genero(songs_bygenres);
@@ -246,7 +243,7 @@ int main() {
       buscar_por_tempo(songs_bytempo) ;
       break;
     case '5':
-      printf("saliendo...\n") ;
+      printf("Cerrando Spotifind...\n") ;
       break;
     }
     presioneTeclaParaContinuar();
